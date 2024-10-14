@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="EntityModel">
+      <HintPath>..\EntityModel\bin\Debug\net8.0\EntityModel.dll</HintPath>
+    </Reference>
+    <Reference Include="myexceptions">
+      <HintPath>..\myexceptions\bin\Debug\net8.0\myexceptions.dll</HintPath>
+    </Reference>
+    <Reference Include="UtilPackage">
+      <HintPath>..\UtilPackage\bin\Debug\net8.0\UtilPackage.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
