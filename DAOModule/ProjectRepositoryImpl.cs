@@ -350,9 +350,9 @@ namespace DAOModule
         {
             string cnstr = PropertyUtil.getPropertyString("dbCn");
             SqlConnection cn = new SqlConnection(cnstr);
-            SqlCommand cmd = new SqlCommand("select * from Task where project_id=@projid and employee_id=@empid", cn);
-            cmd.Parameters.AddWithValue("@projid", projectid);
-            cmd.Parameters.AddWithValue("@empid", empid);
+            SqlCommand cmd = new SqlCommand("select * from Task where project_id="+ projectid +"and employee_id="+ empid, cn);
+            //cmd.Parameters.AddWithValue("@projid", projectid);
+            //cmd.Parameters.AddWithValue("@empid", empid);
             List<Tasks> tasks = new List<Tasks>();
 
             try
