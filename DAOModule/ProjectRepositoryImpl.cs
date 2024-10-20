@@ -353,42 +353,44 @@ namespace DAOModule
             SqlCommand cmd = new SqlCommand("select * from Task where project_id=@projid and employee_id=@empid", cn);
             cmd.Parameters.AddWithValue("@projid", projectid);
             cmd.Parameters.AddWithValue("@empid", empid);
-            cn.Open();
-            //SqlCommand getProjCmd = new SqlCommand("select Id from Project where Id=@projid", cn);
-            //getProjCmd.Parameters.AddWithValue("@projid", projectid);
-            //SqlDataReader reader = getProjCmd.ExecuteReader();
-
-            //if (!reader.HasRows)
-            //{
-            //    reader.Close();
-            //    cn.Close();
-            //    throw new ProjectNotFoundException("Invalid!!! ProjectID doesn't exist in DB");
-            //}
-            //reader.Close();
-            //SqlCommand getEmpCmd = new SqlCommand("select ID from Employee where ID=@empid", cn);
-            //getEmpCmd.Parameters.AddWithValue("@empid", empid);
-            //SqlDataReader reader1 = getEmpCmd.ExecuteReader();
-            //if (!reader1.HasRows)
-            //{
-            //    reader1.Close();
-            //    cn.Close();
-            //    throw new EmployeeNotFoundException("Invalid!!! EmployeeID doesn't exist in DB");
-            //}
-            //reader1.Close();
-            SqlDataReader dr = cmd.ExecuteReader();
             List<Tasks> tasks = new List<Tasks>();
-            while (dr.Read())
+
+            try
             {
-                Tasks task = new Tasks();
-                task.task_id = Convert.ToInt32(dr["task_id"]);
-                task.task_name = dr["task_name"].ToString();
-                task.proj_id = Convert.ToInt32(dr["project_id"]);
-                task.employee_id = Convert.ToInt32(dr["employee_id"]);
-                task.Status = dr["Status"].ToString();
-                tasks.Add(task);
+                cn.Open();
+                SqlDataReader dr = cmd.ExecuteReader();
+
+                if (!dr.HasRows)
+                {
+                    Console.WriteLine("No tasks found for the given project_id and employee_id.");
+                }
+
+                while (dr.Read())
+                {
+                    Tasks task = new Tasks
+                    {
+                        task_id = Convert.ToInt32(dr["task_id"]),
+                        task_name = dr["task_name"].ToString(),
+                        proj_id = Convert.ToInt32(dr["project_id"]),
+                        employee_id = Convert.ToInt32(dr["employee_id"]),
+                        Status = dr["Status"].ToString()
+                    };
+                    tasks.Add(task);
+                }
+
+                dr.Close();
+                return tasks;
             }
-            cn.Close();
-            return tasks;
+            catch (Exception ex)
+            {
+                Console.WriteLine("An error occurred: " + ex.Message);
+                throw;
+            }
+            finally
+            {
+                cn.Close();
+                cn.Dispose();
+            }
         }
     }
 }
