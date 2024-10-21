@@ -1,5 +1,6 @@
 ﻿using EntityModel;
 using DAOModule;
+using myexceptions;
 namespace HelperModule
 {
     public class Helperclass
@@ -40,16 +41,32 @@ namespace HelperModule
             return status;
         }
 
-        public bool deleteProject(int projectid)
+        public void deleteProject(int projectid)
         {
-            bool status = projectRepository.deleteProject(projectid);
-            return status;
+            try
+            {
+                bool status = projectRepository.deleteProject(projectid);
+            }
+            catch (ProjectNotFoundException ex)
+            {
+                throw;
+            }
+            
         }
 
-        public bool deleteEmployee(int empid)
+        public void deletenewEmployee(int empid)
         {
-            bool status = projectRepository.deleteEmployee(empid);
-            return status;
+            try
+            {
+                bool status = projectRepository.deleteEmployee(empid);
+
+            }
+            catch (EmployeeNotFoundException ex)
+            {
+                throw;
+            }
+
+            
         }
 
         public List<Tasks> getAllTasks(int empid, int projectid)

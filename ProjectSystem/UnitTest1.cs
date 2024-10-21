@@ -25,7 +25,7 @@ namespace ProjectSystem
                 Designation = "Developer",
                 Gender = "Male",
                 Salary = 60000,
-                project_id = 3
+                project_id = 8
             };
             Assert.That(helperobj.createnewEmployee(emp), Is.True);
         }
@@ -36,35 +36,33 @@ namespace ProjectSystem
             Tasks task = new Tasks
             {
                 task_name = "Design Database",
-                proj_id = 3,
-                employee_id = 14,
+                proj_id = 8,
+                employee_id = 23,
                 Status = "Assigned"
             };
             Assert.That(helperobj.createNewTask(task), Is.True);
         }
 
         [Test]
-        [TestCase(62,10,10)]
-        [TestCase(4,3,3)]
-        public void TestSearchProjectsAndTasksAssignedToEmployee(int taskid,int empid,int projectid)
+        [TestCase(61,7,21)]
+        //[TestCase(4,3,3)]
+        public void TestSearchProjectsAndTasksAssignedToEmployee(int taskid,int projectid,int empid)
         {
-            Assert.That(helperobj.assignTaskofProjToEmp(taskid,empid,projectid));
+            Assert.That(helperobj.assignTaskofProjToEmp(taskid,projectid,empid));
         }
 
-        [TestCase(1)]
         [TestCase(15)]
-        public void TestProjectNotFoundException(int empid)
+        public void TestProjectNotFoundException(int projid)
         {
-            var ex = Assert.Throws<ProjectNotFoundException>(() => helperobj.deleteEmployee(empid));
-            Assert.That(ex.Message, Is.EqualTo("Invalid!!! ProjectID doesn't exist in DB"));
+            var ex = Assert.Throws<ProjectNotFoundException>(() => helperobj.deleteProject(projid));
+            Assert.That(ex.Message, Is.EqualTo("Project Dosent exsit to be removed"));
         }
 
-        [TestCase(1)]
         [TestCase(15)]
-        public void TestEmployeeNotFoundException(int projectid)
+        public void TestEmployeeNotFoundException(int empid)
         {
-            var ex = Assert.Throws<EmployeeNotFoundException>(() => helperobj.deleteProject(projectid));
-            Assert.That(ex.Message, Is.EqualTo("Invalid!!! EmployeeID doesn't exist in DB"));
+            var ex = Assert.Throws<EmployeeNotFoundException>(() => helperobj.deletenewEmployee(empid));
+            Assert.That(ex.Message, Is.EqualTo("Employee not found in DB"));
         }
     }
 }

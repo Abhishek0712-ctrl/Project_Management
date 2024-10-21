@@ -10,7 +10,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("Hello, Welcome to Our Project Management Console: ");
+        Console.WriteLine("\t \t \t Hello, Welcome to Our Project Management Console: ");
         Employee employee = new Employee();
         Project project = new Project();
         Tasks task = new Tasks();
@@ -20,8 +20,10 @@ internal class Program
         do
         {
             Console.WriteLine("Menu : ");
+            Console.WriteLine("\n");
             Console.WriteLine("1. Add Employee " + "\n" + "2. Add Project " + "\n" + "3. Add Task "+"\n"+ "4. Assign project to employee "+"\n"+"5. Assign task within a project to employee "+"\n"+ "6. Delete Employee. "+"\n"+ "7. Delete Project "+"\n"+ "8. List all projects assigned with tasks to an employeee");
-            Console.WriteLine("Enter Your Choice: ");
+            Console.WriteLine("\n");
+            Console.Write("Enter Your Choice: ");
             int ch = Convert.ToInt32(Console.ReadLine());
             bool status= false;
             
@@ -127,27 +129,37 @@ internal class Program
                 case 6:
                     Console.WriteLine("Enter the employee id: ");
                     int emp_id2 = Convert.ToInt32(Console.ReadLine());
-                    status = helper.deleteEmployee(emp_id2);
-                    if (status)
+
+                    try
                     {
-                        Console.WriteLine("Employee Deleted Successfully");
+                        helper.deletenewEmployee(emp_id2);
+                        Console.WriteLine("Deleted Successfully");
+
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("Employee Not Deleted");
-                    }
+                        Console.WriteLine(ex.Message);
+                    }                    
+                    //if (status)
+                    //{
+                    //    Console.WriteLine("Employee Deleted Successfully");
+                    //}
+                    //else
+                    //{
+                    //    Console.WriteLine("Employee Not Deleted");
+                    //}
                     break;
                 case 7:
                     Console.WriteLine("Enter the project id: ");
                     int projid = Convert.ToInt32(Console.ReadLine());
-                    status = helper.deleteProject(projid);
-                    if (status)
+                    try
                     {
-                        Console.WriteLine("Task Deleted Successfully");
+                        helper.deleteProject(projid);
+                        Console.WriteLine("Deleted Project Successfully");
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        Console.WriteLine("Task Not Deleted");
+                        Console.WriteLine(ex.Message);
                     }
                     break;
                 case 8:
@@ -156,7 +168,7 @@ internal class Program
                     int projID = Convert.ToInt32(Console.ReadLine());
                     Console.WriteLine("Enter the employee id: ");
                     int empid = Convert.ToInt32(Console.ReadLine());
-                    alltasks = helper.getAllTasks(task.employee_id,task.proj_id);
+                    alltasks = helper.getAllTasks(empid,projID);
                     foreach (var item in alltasks)
                     {
                         Console.WriteLine("Task ID: " + item.task_id + " Task Name: " + item.task_name + " Project ID: " + item.proj_id + " Employee ID: " + item.employee_id+ "Status:" + item.Status);
@@ -166,6 +178,7 @@ internal class Program
                     Console.WriteLine("Invalid Choice");
                     break;
             }
+            Console.WriteLine("\n");
             Console.Write("Do you want to continue ? (Y/N): ");
 
             ans = Convert.ToChar(Console.ReadLine());

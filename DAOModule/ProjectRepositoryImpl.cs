@@ -135,21 +135,21 @@ namespace DAOModule
         }
         public bool deleteEmployee(int empid)
         {
-            bool status = false;
+            bool empnotfoundstatus = false;
             try
             {
-                status = RemoveEmployeeFromDB(empid, out status);
+                empnotfoundstatus = RemoveEmployeeFromDB(empid);
             }
             catch (EmployeeNotFoundException ex)
             {
-                Console.WriteLine("Employee doesn't exist in the DB");
-                throw;
+                throw ex;
             }
-            return status;
+            return empnotfoundstatus;
         }
 
-        private static bool RemoveEmployeeFromDB(int empid, out bool status)
+        private static bool RemoveEmployeeFromDB(int empid)
         {
+            bool empnotfoundstatus = false;
             string cnstr = PropertyUtil.getPropertyString("dbCn");
             SqlConnection cn = new SqlConnection(cnstr);
             try
@@ -157,49 +157,48 @@ namespace DAOModule
                 SqlCommand cmdnew = new SqlCommand("delete from Task where employee_id=" + empid, cn);
                 SqlCommand cmd = new SqlCommand("delete from Employee where ID=" + empid, cn);
                 cn.Open();
-                cmdnew.ExecuteNonQuery();
+                int cntTask = cmdnew.ExecuteNonQuery();
                 int cnt = cmd.ExecuteNonQuery();
-                if (cnt > 0)
+                if (cntTask>0 && cnt>0)
                 {
-                    status = true;
+                        empnotfoundstatus = true;
                 }
                 else
                 {
-                    status = false;
+                    throw new EmployeeNotFoundException("Employee not found in DB");
+
                 }
-                return status;
 
             }
-            catch (Exception ex)
+            catch (EmployeeNotFoundException ex)
             {
-
                 throw ex;
-
             }
             finally
             {
                 cn.Close();
                 cn.Dispose();
             }
+            return empnotfoundstatus;
         }
         public bool deleteProject(int projectid)
         {
-            bool status = false;
+            bool Projnotfoundstatus = false;
             try
             {
-                status = RemoveProjectFromDb(projectid, out status);
+                Projnotfoundstatus = RemoveProjectFromDb(projectid);
 
             }
-            catch (ProjectNotFoundException ex)
+            catch(ProjectNotFoundException ex)
             {
-                Console.WriteLine("Project Dosent exsit to be removed");
-                throw;
+                throw ex;
             }
-            return status;
+            return Projnotfoundstatus;
         }
 
-        private bool RemoveProjectFromDb(int proj_id, out bool status)
+        private bool RemoveProjectFromDb(int proj_id)
         {
+            bool projnotexist = false;
             string cnstr = PropertyUtil.getPropertyString("dbCn");
             SqlConnection cn = new SqlConnection(cnstr);
             try
@@ -211,20 +210,20 @@ namespace DAOModule
                 SqlCommand cmdProj = new SqlCommand("DELETE FROM Project WHERE Id=@projid", cn);
                 cmdProj.Parameters.AddWithValue("@projid", proj_id);
                 cn.Open();
-                cmdTask.ExecuteNonQuery();
-                cmdEmp.ExecuteNonQuery();
+                int cntTasks = cmdTask.ExecuteNonQuery();
+                int cntemps = cmdEmp.ExecuteNonQuery();
                 int cnt = cmdProj.ExecuteNonQuery();
-
-                if (cnt > 0)
-                    {
-                        status = true;
-                    }
-                    else
-                    {
-                        status = false;
-                    }
-                    return status;
+                if (cntTasks > 0 && cntemps > 0 && cnt > 0)
+                {
+                    
+                            projnotexist =  true;
+                }
+                else
+                {
+                            throw new ProjectNotFoundException("Project Dosent exsit to be removed");
+                }
             }
+
             catch (Exception ex)
             {
                 throw ex;
@@ -234,6 +233,8 @@ namespace DAOModule
                 cn.Close();
                 cn.Dispose();
             }
+            return projnotexist;
+
         }
         public bool assignProjectToEmployee(int projectid, int emp_id)
         {
@@ -350,9 +351,7 @@ namespace DAOModule
         {
             string cnstr = PropertyUtil.getPropertyString("dbCn");
             SqlConnection cn = new SqlConnection(cnstr);
-            SqlCommand cmd = new SqlCommand("select * from Task where project_id="+ projectid +"and employee_id="+ empid, cn);
-            //cmd.Parameters.AddWithValue("@projid", projectid);
-            //cmd.Parameters.AddWithValue("@empid", empid);
+            SqlCommand cmd = new SqlCommand("select * from Task where project_id="+ projectid +" and employee_id="+ empid, cn);
             List<Tasks> tasks = new List<Tasks>();
 
             try
@@ -365,19 +364,21 @@ namespace DAOModule
                     Console.WriteLine("No tasks found for the given project_id and employee_id.");
                 }
 
-                while (dr.Read())
+                else
                 {
-                    Tasks task = new Tasks
+                    while (dr.Read())
                     {
-                        task_id = Convert.ToInt32(dr["task_id"]),
-                        task_name = dr["task_name"].ToString(),
-                        proj_id = Convert.ToInt32(dr["project_id"]),
-                        employee_id = Convert.ToInt32(dr["employee_id"]),
-                        Status = dr["Status"].ToString()
-                    };
-                    tasks.Add(task);
+                        Tasks task = new Tasks
+                        {
+                            task_id = Convert.ToInt32(dr["task_id"]),
+                            task_name = dr["task_name"].ToString(),
+                            proj_id = Convert.ToInt32(dr["project_id"]),
+                            employee_id = Convert.ToInt32(dr["employee_id"]),
+                            Status = dr["Status"].ToString()
+                        };
+                        tasks.Add(task);
+                    }
                 }
-
                 dr.Close();
                 return tasks;
             }
