@@ -215,12 +215,11 @@ namespace DAOModule
                 int cnt = cmdProj.ExecuteNonQuery();
                 if (cntTasks > 0 && cntemps > 0 && cnt > 0)
                 {
-                    
-                            projnotexist =  true;
+                    projnotexist =  true;
                 }
                 else
                 {
-                            throw new ProjectNotFoundException("Project Dosent exsit to be removed");
+                    throw new ProjectNotFoundException("Project Dosent exsit to be removed");
                 }
             }
 

@@ -10,7 +10,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("\t \t \t Hello, Welcome to Our Project Management Console: ");
+        Console.WriteLine("\t \t \t \t \t Hello, Welcome to Our Project Management Console");
+        Console.WriteLine("\t \t \t \t \t ------------------------------------------------");
         Employee employee = new Employee();
         Project project = new Project();
         Tasks task = new Tasks();
@@ -20,10 +21,10 @@ internal class Program
         do
         {
             Console.WriteLine("Menu : ");
-            Console.WriteLine("\n");
+            Console.WriteLine("-------");
             Console.WriteLine("1. Add Employee " + "\n" + "2. Add Project " + "\n" + "3. Add Task "+"\n"+ "4. Assign project to employee "+"\n"+"5. Assign task within a project to employee "+"\n"+ "6. Delete Employee. "+"\n"+ "7. Delete Project "+"\n"+ "8. List all projects assigned with tasks to an employeee");
             Console.WriteLine("\n");
-            Console.Write("Enter Your Choice: ");
+            Console.Write("Enter Your Choice from Menu: ");
             int ch = Convert.ToInt32(Console.ReadLine());
             bool status= false;
             
